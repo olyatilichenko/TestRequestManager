@@ -7,19 +7,32 @@
 //
 
 import UIKit
+import Alamofire
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        request("https://swift.mrgott.pro/blog.json").validate().responseJSON { responsejs in
+            switch responsejs.result {
+            case .success(let value):
+                print(value)
+                
+                guard let jsonArray = responsejs.result.value as? [[String: Any]] else { return }
+                print("array: ", jsonArray)
+                print("one object: ", jsonArray[0])
+                print("date: ", jsonArray[0]["date"]!)
+
+            case .failure(let error):
+                print(error)
+            }
+        print("viewDidLoad ended")
+        }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
 }
 
