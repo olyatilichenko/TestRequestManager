@@ -16,17 +16,19 @@ class ViewController: UIViewController {
         request("https://swift.mrgott.pro/blog.json").validate().responseJSON { responsejs in
             switch responsejs.result {
             case .success(let value):
-                print(value)
+                guard let jsonArray = value as? Array<[String: Any]> else { return }
+                var videos: [Video] = []
                 
-                guard let jsonArray = responsejs.result.value as? [[String: Any]] else { return }
-                print("array: ", jsonArray)
-                print("one object: ", jsonArray[0])
-                print("date: ", jsonArray[0]["date"]!)
+                for item in jsonArray {
+                    guard let video = Video(json: item) else { return }
+                    videos.append(video)
+                }
+
+                print(videos)
 
             case .failure(let error):
                 print(error)
             }
-        print("viewDidLoad ended")
         }
     }
 
