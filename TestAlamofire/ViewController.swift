@@ -13,23 +13,19 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        request("https://swift.mrgott.pro/blog.json").validate().responseJSON { responsejs in
-            switch responsejs.result {
-            case .success(let value):
-                guard let jsonArray = value as? Array<[String: Any]> else { return }
-                var videos: [Video] = []
-                
-                for item in jsonArray {
-                    guard let video = Video(json: item) else { return }
-                    videos.append(video)
-                }
-
-                print(videos)
-
-            case .failure(let error):
-                print(error)
-            }
-        }
+        
+        let requestManager = RequestManager()
+        
+        let requestAlamofireDelegate = RequestAlamofireDelegate()
+        requestManager.delegate = requestAlamofireDelegate
+        
+        //let requestURLSessionDelegate = RequestURLSessionDelegate()
+        //requestManager.delegate = requestURLSessionDelegate
+        
+        let urlString = "https://swift.mrgott.pro/blog.json"
+        let url = URL(string: urlString)
+        
+        requestManager.getRequest(url: url)
     }
 
     override func didReceiveMemoryWarning() {
